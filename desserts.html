@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Desserts - Taste Haven 🍰</title>
+    <link rel="icon" href="dish.png" type="image/png">
+
+    <style>
+        h1 {
+            font-family: "Nerko One", cursive;
+            font-size: 2em;
+            color: #333;
+            font-weight: bold;
+        }
+        .recipe-card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .recipe-card:hover {
+            transform: scale(1.05);
+        }
+        .recipe-image {
+            height: 200px;
+            object-fit: cover;
+        }
+        .recipe-details {
+            display: none;
+        }
+        .show-details {
+            display: block;
+        }
+        .favorite-btn {
+            margin-top: 10px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .favorite-btn:hover {
+            background-color: #e64a19;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Taste Haven's dessert recipes🍰</h1>
+        <input type="text" id="searchBar" class="form-control mb-4" placeholder="Search for a dessert...">
+        <div class="row" id="dessertContainer"></div>
+        
+        <!-- Button to navigate to the recipe page -->
+        <div class="text-center my-4">
+            <a href="recipes.html" class="btn btn-success">Go to Recipe Page <-</a>
+        </div>
+        <div class="text-center my-4">
+            <a href="index.html" class="btn btn-success">Go to index Page <- </a>
+        </div>
+    </div>
+
+    <script>
+        const desserts = [
+            {
+                name: 'Peda',
+                image: 'peda.jpg',
+                ingredients: ['Milk Powder', 'Condensed Milk', 'Cardamom', 'Ghee'],
+                steps: ['Mix ingredients', 'Shape into small discs', 'Garnish with nuts', 'Serve']
+            },
+            {
+                name: 'Ladoo',
+                image: 'ladoo.jpg',
+                ingredients: ['Besan', 'Ghee', 'Sugar', 'Cardamom'],
+                steps: ['Roast besan', 'Mix with ghee and sugar', 'Shape into balls', 'Cool and serve']
+            },
+            {
+                name: 'Brownie',
+                image: 'brownie.jpg',
+                ingredients: ['Dark Chocolate', 'Butter', 'Sugar', 'Eggs', 'Flour', 'Cocoa Powder', 'Nuts (optional)'],
+                steps: ['Melt chocolate and butter', 'Mix in sugar', 'Add eggs', 'Stir in flour and cocoa', 'Bake until set']
+            },
+            {
+                name: 'Chocolate Mousse',
+                image: 'mousse.jpeg',
+                ingredients: ['Dark Chocolate', 'Eggs', 'Sugar', 'Cream'],
+                steps: ['Melt chocolate', 'Whip cream', 'Fold in beaten eggs and sugar', 'Chill before serving']
+            },
+            {
+                name: 'Pistachio Kulfi',
+                image: 'kulfi.webp',
+                ingredients: ['Milk', 'Sugar', 'Pistachios', 'Cardamom'],
+                steps: ['Boil milk', 'Add sugar and crushed pistachios', 'Freeze in molds']
+            },
+            {
+                name: 'Carrot Halwa',
+                image: 'halwa.jpg',
+                ingredients: ['Grated Carrots', 'Milk', 'Sugar', 'Ghee', 'Cardamom', 'Nuts'],
+                steps: ['Cook grated carrots in milk', 'Add sugar and ghee', 'Simmer until thickened', 'Garnish with nuts']
+            },
+            {
+                name: 'Ras Malai',
+                image: 'rasmal.jpg',
+                ingredients: ['Paneer', 'Milk', 'Sugar', 'Cardamom', 'Saffron'],
+                steps: ['Make paneer balls', 'Soak in sweetened milk', 'Serve chilled']
+            },
+            {
+                name: 'Fruit Chaat',
+                image: 'fruit.jpg',
+                ingredients: ['Mixed Fruits', 'Chaat Masala', 'Lemon Juice'],
+                steps: ['Chop fruits', 'Sprinkle with chaat masala and lemon juice', 'Mix well']
+            },
+            {
+                name: 'Rawa Kesari',
+                image: 'kesari.jpeg',
+                ingredients: ['Semolina', 'Sugar', 'Ghee', 'Saffron', 'Nuts'],
+                steps: ['Roast semolina in ghee', 'Add sugar and water', 'Cook until thickened', 'Garnish with nuts']
+            },
+            {
+                name: 'Barfi',
+                image: 'barfi.webp',
+                ingredients: ['Milk Powder', 'Sugar', 'Ghee', 'Cardamom', 'Nuts'],
+                steps: ['Mix all ingredients', 'Cook until thickened', 'Set in a tray', 'Cut into pieces']
+            },
+            {
+                name: 'Baked Yogurt',
+                image: 'yogurt.jpg',
+                ingredients: ['Yogurt', 'Sugar', 'Vanilla Essence'],
+                steps: ['Mix yogurt with sugar', 'Pour into a baking dish', 'Bake until set']
+            },
+            // Additional desserts
+            {
+                name: 'Chhena Murki',
+                image: 'chena.jpg',
+                ingredients: ['Chhena', 'Sugar', 'Cardamom'],
+                steps: ['Mix chhena with sugar and cardamom', 'Shape into small cubes', 'Let cool and serve']
+            },
+            {
+                name: 'Sooji Halwa',
+                image: 'halwa.jpg',
+                ingredients: ['Semolina', 'Ghee', 'Sugar', 'Water', 'Nuts'],
+                steps: ['Roast semolina in ghee', 'Add sugar and water', 'Cook until thickened', 'Garnish with nuts']
+            },
+            {
+    name: 'Raspberry Pudding',
+    image: 'pudding.jpeg', // Ensure you have the correct image file
+    ingredients: ['Raspberries', 'Sugar', 'Cornstarch', 'Milk', 'Vanilla Extract'],
+    steps: ['Blend raspberries and sugar', 'Heat mixture with cornstarch', 'Add milk and vanilla', 'Pour into cups and chill until set']
+},
+
+            {
+                name: 'Mango Mousse',
+                image: 'mousse.jpeg',
+                ingredients: ['Mango Puree', 'Cream', 'Sugar', 'Gelatin'],
+                steps: ['Mix mango puree with cream', 'Add sugar and gelatin', 'Chill until set']
+            },
+            {
+                name: 'Pineapple Upside Down Cake',
+                image: 'pine.jpg',
+                ingredients: ['Pineapple', 'Butter', 'Sugar', 'Flour', 'Eggs'],
+                steps: ['Arrange pineapple in a pan', 'Mix cake batter', 'Pour over pineapple', 'Bake until golden']
+            },
+            {
+                name: 'Choco Lava Cake',
+                image: 'choco.jpg',
+                ingredients: ['Dark Chocolate', 'Butter', 'Sugar', 'Eggs', 'Flour'],
+                steps: ['Melt chocolate and butter', 'Mix in sugar and eggs', 'Add flour', 'Bake until outer is firm']
+            },
+            {
+                name: 'Sandesh',
+                image: 'san.jpg',
+                ingredients: ['Chhena', 'Sugar', 'Cardamom', 'Nuts'],
+                steps: ['Mix chhena with sugar', 'Shape into small discs', 'Garnish with nuts']
+            },
+            {
+                name: 'Lemon Tart',
+                image: 'lemon.jpeg',
+                ingredients: ['Flour', 'Butter', 'Sugar', 'Eggs', 'Lemon Juice'],
+                steps: ['Make tart crust', 'Mix filling', 'Bake until set', 'Cool before serving']
+            },
+            {
+                name: 'Tiramisu',
+                image: 'tira.jpg',
+                ingredients: ['Mascarpone', 'Coffee', 'Ladyfingers', 'Cocoa Powder', 'Sugar'],
+                steps: ['Layer coffee-soaked ladyfingers with mascarpone mixture', 'Dust with cocoa']
+            },
+            {
+                name: 'Malpua',
+                image: 'malpu.jpg',
+                ingredients: ['All-purpose Flour', 'Milk', 'Sugar', 'Cardamom Powder', 'Coconut (grated, optional)', 'Ghee (for frying)'],
+                steps: ['Mix flour, milk, sugar, and cardamom to form a batter', 'Heat ghee in a pan', 'Pour batter into the pan and fry until golden brown', 'Serve with grated coconut if desired']
+            }
+        ];
+
+        function displayDesserts(desserts) {
+            const container = document.getElementById('dessertContainer');
+            container.innerHTML = '';
+
+            desserts.forEach((dessert, index) => {
+                const card = document.createElement('div');
+                card.className = 'col-md-4 mb-4';
+                card.innerHTML = `
+                    <div class="card recipe-card">
+                        <img src="${dessert.image}" class="card-img-top recipe-image" alt="${dessert.name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${dessert.name}</h5>
+                            <button class="btn btn-primary" onclick="toggleDetails(${index})">View Details</button>
+                            <div class="recipe-details" id="dessert-details-${index}">
+                                <h6>Ingredients:</h6>
+                                <ul>${dessert.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}</ul>
+                                <h6>Steps:</h6>
+                                <ol>${dessert.steps.map(step => `<li>${step}</li>`).join('')}</ol>
+                                <button class="favorite-btn" onclick="addToFavorites('${dessert.name}')">Add to Favorites</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleDetails(index) {
+            const details = document.getElementById(`dessert-details-${index}`);
+            details.classList.toggle('show-details');
+        }
+
+        function addToFavorites(dessertName) {
+            alert(`${dessertName} has been added to favorites!`);
+        }
+
+        document.getElementById('searchBar').addEventListener('input', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredDesserts = desserts.filter(dessert => dessert.name.toLowerCase().includes(searchTerm));
+            displayDesserts(filteredDesserts);
+        });
+
+        // Initial display
+        displayDesserts(desserts);
+    </script>
+</body>
+</html>

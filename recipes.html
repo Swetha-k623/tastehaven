@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Taste Haven 😋</title>
+    <link rel="icon" href="dish.png" type="image/png">
+
+    </head>
+
+    
+    <style>
+        h1 {
+    font-family:"Nerko One", cursive; /* Change to your desired font */
+    font-size: 2em; /* Change the font size */
+    color: #333; /* Change the font color */
+    font-weight: bold; /* Change the font weight */
+    }
+    .recipe-card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .recipe-card:hover {
+            transform: scale(1.05);
+        }
+
+        .recipe-image {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .recipe-details {
+            display: none;
+        }
+
+        .show-details {
+            display: block;
+        }
+
+        .favorite-btn {
+            margin-top: 10px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .favorite-btn:hover {
+            background-color: #e64a19;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Taste Haven's indian dish recipes 🥘 </h1>
+        <input type="text" id="searchBar" class="form-control mb-4" placeholder="Search for a recipe...">
+        <a href="desserts.html" class="btn btn-secondary mb-4">View Desserts</a>
+        <div class="row" id="recipeContainer"></div>
+    </div>
+
+    <script>
+        const recipes = [
+            {
+                name: 'Biryani',
+                image: 'briyani.jpeg',
+                ingredients: ['Basmati Rice', 'Chicken', 'Biryani Masala', 'Onion', 'Tomato'],
+                steps: ['Cook rice', 'Prepare chicken masala', 'Layer rice and chicken', 'Cook on low flame']
+            },
+            {
+                name: 'Paneer Butter Masala',
+                image: 'paneer.jpg',
+                ingredients: ['Paneer', 'Butter', 'Tomato', 'Cream', 'Spices'],
+                steps: ['Prepare tomato gravy', 'Add paneer', 'Cook with cream and butter', 'Serve hot with naan']
+            },
+            {
+                name: 'Dosa',
+                image: 'dosa.avif',
+                ingredients: ['Dosa Batter', 'Potato', 'Onion', 'Spices'],
+                steps: ['Prepare potato filling', 'Spread dosa batter on tawa', 'Cook and fill with potato', 'Serve with chutney']
+            },
+            {
+                name: 'Chole Bhature',
+                image: 'chole.jpg',
+                ingredients: ['Chickpeas', 'Spices', 'Maida', 'Yogurt'],
+                steps: ['Prepare chole masala', 'Knead dough for bhature', 'Fry bhature', 'Serve hot with chole']
+            },
+            {
+                name: 'Gulab Jamun',
+                image: 'jamun.jpg',
+                ingredients: ['Khoya', 'Sugar', 'Water', 'Cardamom', 'Rose Water'],
+                steps: ['Prepare dough', 'Fry the dough balls', 'Soak in sugar syrup', 'Serve hot or cold']
+            },
+            {
+                name: 'Butter Chicken',
+                image: 'bchick.jpg',
+                ingredients: ['Chicken', 'Butter', 'Tomato', 'Cream', 'Spices'],
+                steps: ['Marinate chicken', 'Cook tomato gravy', 'Add chicken', 'Cook with cream and butter']
+            },
+            {
+                name: 'Aloo Paratha',
+                image: 'aloo.avif',
+                ingredients: ['Wheat Flour', 'Potato', 'Spices', 'Ghee'],
+                steps: ['Prepare potato filling', 'Stuff paratha', 'Cook on tawa with ghee', 'Serve hot with butter or curd']
+            },
+            {
+                name: 'Masala Dosa',
+                image: 'mdosa.png',
+                ingredients: ['Dosa Batter', 'Potato', 'Onion', 'Spices'],
+                steps: ['Make dosa', 'Prepare potato filling', 'Stuff dosa', 'Serve with chutney and sambar']
+            },
+            {
+                name: 'Pav Bhaji',
+                image: 'pvb.jpg',
+                ingredients: ['Mixed Vegetables', 'Pav', 'Butter', 'Spices'],
+                steps: ['Prepare bhaji', 'Toast pav with butter', 'Serve hot with onions and lemon']
+            },
+            {
+                name: 'Rasgulla',
+                image: 'ras.jpeg',
+                ingredients: ['Paneer', 'Sugar', 'Water', 'Cardamom'],
+                steps: ['Prepare paneer balls', 'Boil in sugar syrup', 'Cool and serve']
+            },
+            {
+                name: 'Samosa',
+                image: 'sam.webp',
+                ingredients: ['Potato', 'Spices', 'Maida', 'Ghee'],
+                steps: ['Prepare filling', 'Make dough and shape samosas', 'Fry until golden', 'Serve with chutney']
+            },
+            // New Recipes Added
+            {
+                name: 'Rajma',
+                image: 'rajma.jpg',
+                ingredients: ['Red Kidney Beans', 'Tomato', 'Onion', 'Spices'],
+                steps: ['Soak kidney beans', 'Cook with spices', 'Serve with rice']
+            },
+            {
+                name: 'Pani Puri',
+                image: 'pp.jpg',
+                ingredients: ['Puri', 'Potato', 'Chickpeas', 'Pani'],
+                steps: ['Fill puris with potato and chickpeas', 'Serve with spicy water']
+            },
+            {
+                name: 'Palak Paneer',
+                image: 'palp.jpg',
+                ingredients: ['Spinach', 'Paneer', 'Spices', 'Cream'],
+                steps: ['Cook spinach', 'Blend to make puree', 'Add paneer and spices', 'Serve hot']
+            },
+            {
+                name: 'Idli',
+                image: 'idli.jpeg',
+                ingredients: ['Idli Batter', 'Water'],
+                steps: ['Steam idli batter', 'Serve with chutney and sambar']
+            },
+            {
+                name: 'Tandoori Chicken',
+                image: 'tanc.jpeg',
+                ingredients: ['Chicken', 'Yogurt', 'Spices'],
+                steps: ['Marinate chicken', 'Cook in tandoor or oven', 'Serve hot']
+            },
+            {
+                name: 'Methi Thepla',
+                image: 'methi.jpg',
+                ingredients: ['Wheat Flour', 'Fenugreek Leaves', 'Spices'],
+                steps: ['Knead dough', 'Roll out and cook on tawa', 'Serve with yogurt']
+            },
+            {
+                name: 'Kofta Curry',
+                image: 'kofta.jpeg',
+                ingredients: ['Bottle Gourd', 'Gram Flour', 'Spices', 'Tomato'],
+                steps: ['Prepare kofta balls', 'Fry and add to curry', 'Serve hot with rice']
+            },
+            {
+                name: 'Tikka Masala',
+                image: 'tik.jpeg',
+                ingredients: ['Chicken', 'Yogurt', 'Tomato', 'Spices'],
+                steps: ['Marinate chicken', 'Cook in gravy', 'Serve hot with rice or naan']
+            },
+            {
+                name: 'Kheer',
+                image: 'kheer.webp',
+                ingredients: ['Rice', 'Milk', 'Sugar', 'Cardamom'],
+                steps: ['Cook rice in milk', 'Add sugar and cardamom', 'Serve chilled']
+            },
+
+            {
+                name: 'prawn malabar curry',
+                image: 'prawn.jpg',
+                ingredients: ['Prawns', 'Coconut Milk', 'Onion', 'Tomato', 'Ginger-Garlic Paste', 'Curry Leaves', 'Spices'],
+                steps: ['Sauté onion and ginger-garlic', 'Add tomatoes and spices', 'Pour in coconut milk', 'Add prawns and simmer until cooked']
+            },
+
+            {
+    name: 'Bhel Puri',
+    image: 'bhel.jpg',
+    ingredients: ['Puffed Rice', 'Onion', 'Tomato', 'Cucumber', 'Sev', 'Chutneys', 'Coriander'],
+    steps: ['Mix puffed rice with chopped vegetables', 'Add chutneys and spices', 'Top with sev and garnish with coriander']
+},
+
+
+{
+    name: 'Kachori',
+    image: 'kachori.jpg',
+    ingredients: ['Maida (All-purpose Flour)', 'Ghee or Oil', 'Yellow Moong Dal', 'Cumin Seeds', 'Fennel Seeds', 'Coriander Powder', 'Turmeric Powder', 'Red Chili Powder', 'Salt'],
+    steps: ['Prepare dough with flour and ghee', 'Cook moong dal with spices until dry', 'Stuff the mixture into the dough and seal', 'Deep fry until golden brown']
+},
+
+{
+    name: 'Puran Poli',
+    image: 'puran.jpg',
+    ingredients: ['Whole Wheat Flour', 'Chana Dal (Split Bengal Gram)', 'Jaggery', 'Cardamom Powder', 'Turmeric Powder', 'Ghee', 'Salt'],
+    steps: ['Cook chana dal until soft and mash it', 'Mix with jaggery, cardamom, and turmeric', 'Prepare dough with flour, ghee, and salt', 'Stuff the filling in the dough, roll out, and cook on a hot griddle with ghee']
+}
+
+
+
+        ];
+
+        function displayRecipes(recipes) {
+            const container = document.getElementById('recipeContainer');
+            container.innerHTML = '';
+
+            recipes.forEach((recipe, index) => {
+                const card = document.createElement('div');
+                card.className = 'col-md-4 mb-4';
+                card.innerHTML = `
+                    <div class="card recipe-card">
+                        <img src="${recipe.image}" class="card-img-top recipe-image" alt="${recipe.name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${recipe.name}</h5>
+                            <button class="btn btn-primary" onclick="toggleDetails(${index})">View Details</button>
+                            <div class="recipe-details" id="details-${index}">
+                                <h6>Ingredients:</h6>
+                                <ul>${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}</ul>
+                                <h6>Steps:</h6>
+                                <ol>${recipe.steps.map(step => `<li>${step}</li>`).join('')}</ol>
+                                <button class="favorite-btn" onclick="addToFavorites('${recipe.name}')">Add to Favorites</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleDetails(index) {
+            const details = document.getElementById(`details-${index}`);
+            details.classList.toggle('show-details');
+        }
+
+        function addToFavorites(recipeName) {
+            alert(`${recipeName} has been added to favorites!`);
+        }
+
+        document.getElementById('searchBar').addEventListener('input', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredRecipes = recipes.filter(recipe => recipe.name.toLowerCase().includes(searchTerm));
+            displayRecipes(filteredRecipes);
+        });
+
+        // Initial display
+        displayRecipes(recipes);
+    </script>
+</body>
+</html>
+
